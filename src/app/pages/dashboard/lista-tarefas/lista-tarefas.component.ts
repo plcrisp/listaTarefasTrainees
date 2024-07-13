@@ -8,12 +8,18 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
   styleUrl: './lista-tarefas.component.scss'
 })
 export class ListaTarefasComponent {
+
+  // variável para controlar se a lista de tarefas foi iniciada (true) ou não (false). Inicializada como false.
   visualizarLista: boolean = false;
 
+  // formulário da tarefa
   tarefaForm: FormGroup;
 
+  // vetor de tarefas
   tarefas: any[] = [];
 
+  // o construtor do componente declara quais serão os campos do formulário (manipulados no HTML através da tag "formGroup"), 
+  // como eles são inicializados e se eles são obrigatórios ou não.
   constructor(private fb: FormBuilder, private db: AngularFirestore) { 
     this.tarefaForm = this.fb.group({
       titulo: ['', Validators.required],
@@ -22,6 +28,9 @@ export class ListaTarefasComponent {
     });
   }
 
+
+  // cria uma variável e atribui o valor do formulário para ela. Além disso, adiciona o atributo concluída como false, para sempre começar como pendente. 
+  // adiciona no vetor de tarefas e limpa os campos do formulário.
   onSubmit(): void {
     let tarefa = this.tarefaForm.value;
     tarefa.concluida = false;
@@ -34,18 +43,18 @@ export class ListaTarefasComponent {
     this.visualizarLista = true;
   }
 
+  // procura a tarefa a partir de seu título e torna seu atributo "concluída" como true.
   concluirTarefa(titulo: string): void {
     const index = this.tarefas.findIndex(t => t.titulo === titulo);
     
     this.tarefas[index].concluida = true;
   }
 
+  // procura a tarefa a partir de seu título e a exclui.
   excluirTarefa(titulo: string): void {
     const index = this.tarefas.findIndex(t => t.titulo === titulo);
     
     this.tarefas.splice(index, 1); 
   }
-
-
 
 }
